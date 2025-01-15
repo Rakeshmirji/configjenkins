@@ -1,12 +1,11 @@
-@Library('pipeline-utility-steps') _
-
+import groovy.json.JsonSlurper
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.168' }
 
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-        text(name: 'APP_CONFIG', defaultValue: '''{
+        textarea(name: 'APP_CONFIG', defaultValue: '''{
             "Paint": {
                 "Name": "Paint-Common"
             },
@@ -51,4 +50,5 @@ pipeline {
         }
 
     }
+
 }
