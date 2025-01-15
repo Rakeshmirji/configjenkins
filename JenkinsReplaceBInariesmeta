@@ -3,10 +3,10 @@ import groovy.json.JsonSlurper
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.142' }
 
-    parameters {
-        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
-        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-    }
+    // parameters {
+    //     string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
+    //     string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
+    // }
 
     stages {
         stage('Build') {
