@@ -10,6 +10,9 @@ pipeline {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
         string(name: 'Timeout', defaultValue: '1000', description: 'Timeout for the Test stage (in seconds)')
+        string(name: 'ctxentryprotectv2_download_link_branch', defaultValue: 'https://use-repo.citrite.net/artifactory/sesbld-virtual-releases/Jenkins/sesbuild-cwa-jm/sen/ctx-entryprotect-v2/ctx-master/278/ctx-entryprotect-v2.zip', description: 'Timeout for the Test stage (in seconds)')
+        ctxentryprotectv2_download_link
+
         
     }
 
@@ -20,7 +23,9 @@ pipeline {
                     // Add BRANCH_NAME and ENVIRONMENT to the configMap
                     def configMap = [
                         BRANCH_NAME: params.BRANCH_NAME,
-                        ENVIRONMENT: params.ENVIRONMENT
+                        ENVIRONMENT: params.ENVIRONMENT,
+                        ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch
+
                     ]
 
                     // Generate JSON string using custom toJson function
