@@ -1,26 +1,35 @@
+// Custom toJson function to manually construct JSON from a map
+def toJson(map) {
+    return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
+}
+
 pipeline {
     agent { label 'Apppxenwin10Agent_10.109.201.142' }
 
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-        string(name: 'Timeout', defaultValue: '10', description: 'Timeout for the Test stage (in minutes)')
+        string(name: 'Timeout', defaultValue: '1000', description: 'Environment to deploy to')
     }
 
     stages {
         stage('Download Binaries') {
             steps {
                 script {
+                    // Add BRANCH_NAME and ENVIRONMENT to the configMap
                     def configMap = [
                         BRANCH_NAME: params.BRANCH_NAME,
                         ENVIRONMENT: params.ENVIRONMENT
                     ]
+
+                    // Generate JSON string using custom toJson function
                     def jsonConfigString = toJson(configMap)
 
                     echo "Generated JSON: ${jsonConfigString}"
+                    TOut= env.Timeout.toInteger()
 
-                    // Save JSON to file
-                    def configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
+                    // Save the JSON string to the specified path
+                    def configPath = './Automation.json'
                     writeFile file: configPath, text: jsonConfigString
                 }
                 sh "echo Building branch ${params.BRANCH_NAME}..."
@@ -29,17 +38,12 @@ pipeline {
 
         stage('Test') {
             steps {
-                script {
-                    def TOut = params.Timeout.toInteger()
-                }
-                timeout(time: TOut, unit: 'MINUTES') {
-                    script {
-                        def powershellPath = "${env.WORKSPACE}/Replacebinaries/Replacebinaries.ps1"
-                        echo "Executing PowerShell script at: ${powershellPath}"
+                timeout(TOut){
+                    powershellPath ="${env.WORKSPACE}/Replacebinaries.ps1"
+                    powershell(powershellPath)
+                    //println "Archiving Artifacts"
+                    //archiveArtifacts artifacts: "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/reports/*.*"  
                     }
-                    // Execute the PowerShell script
-                    bat "powershell -File ${env.WORKSPACE}/Replacebinaries/Replacebinaries.ps1"
-                }
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
             }
         }
@@ -50,9 +54,4 @@ pipeline {
             }
         }
     }
-}
-
-// Custom toJson function to manually construct JSON from a map
-def toJson(map) {
-    return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
