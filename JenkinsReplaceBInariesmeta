@@ -4,7 +4,7 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-        textarea(name: 'APP_CONFIG', defaultValue: '''{
+        text(name: 'APP_CONFIG', defaultValue: '''{
             "Paint": {
                 "Name": "Paint-Common"
             },
