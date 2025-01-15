@@ -5,10 +5,6 @@ pacmanPipelineGenericDocker(
       yamlProperties:[
     	buildNumber : env.BuildNum,
     	branchName: env.BranchName,
-        maxBuilds: artifactKeepNum,
-    	maxDays: artifactKeepDays,
-		targetArtifactoryPath: "Jenkins/",
-        suiteName: suiteName
   	],
     scmTimeout: 150,
 	configFile: "${env.WORKSPACE}/Jenkins/pipeline.yaml",
