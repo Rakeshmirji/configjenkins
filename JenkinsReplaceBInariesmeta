@@ -6,41 +6,12 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-        text(name: 'APP_CONFIG', defaultValue: '''{
-            "Paint": {
-                "Name": "Paint-Common"
-            },
-            "Notepad": {
-                "Name": "Notepad-TSVDA-AppP"
-            },
-            "Calculator": {
-                "Name": "Calculator-TSVDA-AppP"
-            },
-            "Desktop1": {
-                "Name": "TSVDA-Common"
-            },
-            "Desktop2": {
-                "Name": "TSVDA-AppP"
-            },
-            "Desktop3": {
-                "Name": "Calculator-TSVDA-AppP"
-            },
-            "Desktop4": {
-                "Name": "Calculator-TSVDA-AppP"
-            }
-        }''', description: 'App config')
     }
 
     stages {
         stage('Build') {
             steps {
                 sh "echo Building branch ${params.BRANCH_NAME}..."
-                script {
-                    def appConfig = new JsonSlurper().parseText(params.APP_CONFIG)
-                    def appConfigMap = new HashMap(appConfig) // Convert LazyMap to HashMap
-                    // Use the appConfigMap variable as needed
-                    sh "echo ${appConfigMap.Desktop4.Name} "
-                }
             }
         }
         stage('Test') {
