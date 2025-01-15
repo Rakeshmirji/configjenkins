@@ -12,3 +12,5 @@ write-host "the json is convert to json before"
 $json | ConvertTo-Json -Depth 10 | Write-Host
 write-host "the json is convert to json after"
 print("hello world")
+[string]$Global:StoreTypeX1 = $json.BRANCH_NAME
+print($StoreTypeX1)
