@@ -10,6 +10,8 @@ def jsonConfigString = JsonOutput.toJson(configMap)
 
 
 def jsonConfig = readJSON text: jsonConfigString
+configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
+writeJSON(file: configPath, json: jsonConfig, pretty: 4)
 
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.142' }
@@ -21,13 +23,7 @@ pipeline {
     stages {
         stage('downloadbinaries') {
             steps {
-                script {
-                    // Convert map object to JSON String
-                    
-                    // Save config as JSON in correct dir
-                    configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
-                    writeJSON(file: configPath, json: jsonConfig, pretty: 4)
-                }
+               
                 sh "echo Building branch ${params.BRANCH_NAME}..."
             }
         }
