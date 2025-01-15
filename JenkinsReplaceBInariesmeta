@@ -5,6 +5,12 @@ def configMap = []
 def branchname = ["BRANCH_NAME": params.BRANCH_NAME]
 configMap << branchname
 def configPath = "${env.WORKSPACE}/Automation.json"
+
+def jsonConfigString = JsonOutput.toJson(configMap)
+
+
+def jsonConfig = readJSON text: jsonConfigString
+
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.142' }
 
@@ -17,11 +23,7 @@ pipeline {
             steps {
                 script {
                     // Convert map object to JSON String
-                    def jsonConfigString = JsonOutput.toJson(configMap)
-
-                    // Convert JSON string to JSON Object
-                    def jsonConfig = readJSON text: jsonConfigString
-
+                    
                     // Save config as JSON in correct dir
                     configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
                     writeJSON(file: configPath, json: jsonConfig, pretty: 4)
