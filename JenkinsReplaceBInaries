@@ -1,7 +1,7 @@
 @Library("PacMan") _
 
 pacmanPipelineGenericDocker(
-    nodeLabel: "automation&&azure",
+    nodeLabel: "Apppxenwin10Agent_10.109.201.168",
     jobParameters: [
         booleanParam(name: 'test_run', defaultValue: true, description: 'Enable test_run option to create a feature branch from branch_from for testing purpose'),
         string(name: 'branch_from', defaultValue: 'ctx-master', description: 'Release branching source branch'),
