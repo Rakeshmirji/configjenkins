@@ -2,6 +2,16 @@
 
 pacmanPipelineGenericDocker(
     nodeLabel: "Apppxenwin10Agent_10.109.201.168",
+      yamlProperties:[
+    	buildNumber : env.BuildNum,
+    	branchName: env.BranchName,
+        maxBuilds: artifactKeepNum,
+    	maxDays: artifactKeepDays,
+		targetArtifactoryPath: "Jenkins/",
+        suiteName: suiteName
+  	],
+    scmTimeout: 150,
+	configFile: "${env.WORKSPACE}/Jenkins/pipeline.yaml",
     jobParameters: [
         booleanParam(name: 'test_run', defaultValue: true, description: 'Enable test_run option to create a feature branch from branch_from for testing purpose'),
         string(name: 'branch_from', defaultValue: 'ctx-master', description: 'Release branching source branch'),
