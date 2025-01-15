@@ -37,8 +37,9 @@ pipeline {
                 sh "echo Building branch ${params.BRANCH_NAME}..."
                 script {
                     def appConfig = new JsonSlurper().parseText(params.APP_CONFIG)
-                    // Use the appConfig variable as needed
-                    sh "echo ${appConfig.Desktop4.Name} "
+                    def appConfigMap = new HashMap(appConfig) // Convert LazyMap to HashMap
+                    // Use the appConfigMap variable as needed
+                    sh "echo ${appConfigMap.Desktop4.Name} "
                 }
             }
         }
