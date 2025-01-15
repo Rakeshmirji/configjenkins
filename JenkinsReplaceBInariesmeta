@@ -10,6 +10,7 @@ pipeline {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
         string(name: 'Timeout', defaultValue: '1000', description: 'Timeout for the Test stage (in seconds)')
+        
     }
 
     stages {

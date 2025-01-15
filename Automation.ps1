@@ -11,6 +11,8 @@ write-host "the json is $json"
 write-host "the json is convert to json before"
 $json | ConvertTo-Json -Depth 10 | Write-Host
 write-host "the json is convert to json after"
-print("hello world")
+
 [string]$Global:StoreTypeX1 = $json.BRANCH_NAME
 Write-Host "StoreTypeX1 = $StoreTypeX1"
+$Global:AntiDLLInjectionTestScriptLink = "https://use-repo.citrite.net/artifactory/sesbld-virtual-releases/Jenkins/sesbuild-cwa-jm/sen/ctx-entryprotect-v2/ctx-master/278/ctx-entryprotect-v2.zip"
+$wc.DownloadFile($Global:AntiDLLInjectionTestScriptLink, "$here\ctx-entryprotect-v2.zip")
