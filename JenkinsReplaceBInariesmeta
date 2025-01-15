@@ -15,12 +15,14 @@ pipeline {
         stage('Download Binaries') {
             steps {
                 script {
-                    def configMap = []
-                    def branchname = ["BRANCH_NAME": params.BRANCH_NAME]
-                    configMap << branchname
+                    // Add BRANCH_NAME and ENVIRONMENT to the configMap
+                    def configMap = [
+                        BRANCH_NAME: params.BRANCH_NAME,
+                        ENVIRONMENT: params.ENVIRONMENT
+                    ]
 
                     // Generate JSON string using custom toJson function
-                    def jsonConfigString = toJson(configMap[0])
+                    def jsonConfigString = toJson(configMap)
 
                     echo "Generated JSON: ${jsonConfigString}"
 
