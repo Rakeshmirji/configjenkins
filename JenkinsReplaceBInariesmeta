@@ -4,7 +4,7 @@ def toJson(map) {
 }
 
 pipeline {
-    agent { label 'Apppxenwin10Agent_10.109.201.142' }
+    agent { label 'Apppxenwin10Agent_10.109.201.168' }
 
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
