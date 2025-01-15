@@ -1,37 +1,45 @@
-import groovy.json.*
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 import com.cloudbees.groovy.cps.NonCPS
 import java.text.SimpleDateFormat
+
 def configMap = []
-def branchname = ["BRANCH_NAME": params.BRANCH_NAME]
+def branchname = ["BRANCH_NAME": params.BRANCH_NAME ?: 'main']
 configMap << branchname
 def configPath = "${env.WORKSPACE}/Automation.json"
 
-def jsonConfigString = JsonOutput.toJson(configMap)
-
-
-def jsonConfig = readJSON text: jsonConfigString
-configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
-writeJSON(file: configPath, json: jsonConfig, pretty: 4)
-
 pipeline {
-    agent { node 'Apppxenwin10Agent_10.109.201.142' }
+    agent { label 'Apppxenwin10Agent_10.109.201.142' }
 
-    // parameters {
-    //     string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
-    //     string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-    // }
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
+    }
+
     stages {
-        stage('downloadbinaries') {
+        stage('Download Binaries') {
             steps {
-               
+                script {
+                    // Convert map object to JSON string
+                    def jsonConfigString = JsonOutput.toJson(configMap)
+
+                    // Convert JSON string to JSON object (optional, for validation)
+                    def jsonConfig = new JsonSlurper().parseText(jsonConfigString)
+
+                    // Save config as JSON in the correct directory
+                    configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
+                    writeJSON(file: configPath, json: jsonConfig, pretty: 4)
+                }
                 sh "echo Building branch ${params.BRANCH_NAME}..."
             }
         }
+
         stage('Test') {
             steps {
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
             }
         }
+
         stage('Deploy') {
             steps {
                 sh "echo Deploying to ${params.ENVIRONMENT} environment..."
