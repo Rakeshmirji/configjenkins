@@ -9,6 +9,7 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
+        string(name: 'Timeout', defaultValue: '10', description: 'Environment to deploy to')
     }
 
     stages {
@@ -25,6 +26,7 @@ pipeline {
                     def jsonConfigString = toJson(configMap)
 
                     echo "Generated JSON: ${jsonConfigString}"
+                    TOut= env.Timeout.toInteger()
 
                     // Save the JSON string to the specified path
                     def configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
@@ -36,6 +38,12 @@ pipeline {
 
         stage('Test') {
             steps {
+                timeout(TOut){
+                    powershellPath ="${env.WORKSPACE}/Replacebinaries/Replacebinaries.ps1"
+                    powershell(powershellPath)
+                    //println "Archiving Artifacts"
+                    //archiveArtifacts artifacts: "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/reports/*.*"  
+                    }
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
             }
         }
