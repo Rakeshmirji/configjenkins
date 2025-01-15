@@ -4,12 +4,37 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
+         textarea(name: 'APP_CONFIG', defaultValue: '''{
+            "Paint": {
+                "Name": "Paint-Common"
+            },
+            "Notepad": {
+                "Name": "Notepad-TSVDA-AppP"
+            },
+            "Calculator": {
+                "Name": "Calculator-TSVDA-AppP"
+            },
+            "Desktop1": {
+                "Name": "TSVDA-Common"
+            },
+            "Desktop2": {
+                "Name": "TSVDA-AppP"
+            },
+            "Desktop3": {
+                "Name": "Calculator-TSVDA-AppP"
+            },
+            "Desktop4": {
+                "Name": "Calculator-TSVDA-AppP"
+            }
+        }''', description: 'App config')
+    }
     }
 
     stages {
         stage('Build') {
             steps {
                 sh "echo Building branch ${params.BRANCH_NAME}..."
+                sh "echo ${params.APP_CONFIG.Desktop4.Name} > app_config.json"
             }
         }
         stage('Test') {
