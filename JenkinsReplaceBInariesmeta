@@ -37,12 +37,12 @@ pipeline {
             steps {
                 script {
                     def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
-                    def powershellPath = "${env.WORKSPACE}/Replacebinaries.ps1" // Define the PowerShell script path
+                    def powershellPath = "${env.WORKSPACE}/Automation.ps1" // Define the PowerShell script path
                     echo "PowerShell script path: ${powershellPath}"
                 }
                 timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
                     // Execute the PowerShell script
-                    bat "powershell -File ${env.WORKSPACE}/Replacebinaries.ps1"
+                    bat "powershell -File ${env.WORKSPACE}/Automation.ps1"
                 }
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
             }
