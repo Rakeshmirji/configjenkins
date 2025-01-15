@@ -1,5 +1,10 @@
-import groovy.json.JsonSlurper
-
+import groovy.json.*
+import com.cloudbees.groovy.cps.NonCPS
+import java.text.SimpleDateFormat
+def configMap = []
+def branchname = ["BRANCH_NAME": params.BRANCH_NAME]
+configMap << branchname
+def configPath = "${env.WORKSPACE}/Automation.json"
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.142' }
 
@@ -7,10 +12,20 @@ pipeline {
     //     string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
     //     string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
     // }
-
     stages {
-        stage('Build') {
+        stage('downloadbinaries') {
             steps {
+                script {
+                    // Convert map object to JSON String
+                    def jsonConfigString = JsonOutput.toJson(configMap)
+
+                    // Convert JSON string to JSON Object
+                    def jsonConfig = readJSON text: jsonConfigString
+
+                    // Save config as JSON in correct dir
+                    configPath = './Automation/CWA_Automation/CWA_Automation/flows/config/OnPrem.json'
+                    writeJSON(file: configPath, json: jsonConfig, pretty: 4)
+                }
                 sh "echo Building branch ${params.BRANCH_NAME}..."
             }
         }
