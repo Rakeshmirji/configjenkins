@@ -4,7 +4,7 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-         textarea(name: 'APP_CONFIG', defaultValue: '''{
+        textarea(name: 'APP_CONFIG', defaultValue: '''{
             "Paint": {
                 "Name": "Paint-Common"
             },
@@ -28,13 +28,13 @@ pipeline {
             }
         }''', description: 'App config')
     }
-    }
 
     stages {
         stage('Build') {
             steps {
                 sh "echo Building branch ${params.BRANCH_NAME}..."
-                sh "echo ${params.APP_CONFIG.Desktop4.Name} > app_config.json"
+                def appConfig = readJSON text: params.APP_CONFIG
+                sh "echo ${appConfig.Desktop4.Name} > app_config.json"
             }
         }
         stage('Test') {
@@ -47,5 +47,6 @@ pipeline {
                 sh "echo Deploying to ${params.ENVIRONMENT} environment..."
             }
         }
+
     }
 }
