@@ -1,0 +1,26 @@
+pipeline {
+    agent { node 'Apppxenwin10Agent_10.109.201.168' }
+
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh "echo Building branch ${params.BRANCH_NAME}..."
+            }
+        }
+        stage('Test') {
+            steps {
+                sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh "echo Deploying to ${params.ENVIRONMENT} environment..."
+            }
+        }
+    }
+}

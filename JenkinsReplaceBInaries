@@ -9,7 +9,7 @@ pacmanPipelineGenericDocker(
     scmTimeout: 150,
 	configFile: "${env.WORKSPACE}/Jenkins/pipeline.yaml",
     jobParameters: [
-        booleanParam(name: 'test_run', defaultValue: true, description: 'Enable test_run option to create a feature branch from branch_from for testing purpose'),
+        //booleanParam(name: 'test_run', defaultValue: true, description: 'Enable test_run option to create a feature branch from branch_from for testing purpose'),
         string(name: 'branch_from', defaultValue: 'ctx-master', description: 'Release branching source branch'),
         string(name: 'branch_to', defaultValue: 'ctx-master', description: 'Release branching target branch. Example input: ctx-release-2303 or feature-APPP-2026-test for test run'),
         string(name: 'version_commit_jira', defaultValue: '', description: 'Version update commit Jira ID. Example input: APPP-2026'),
@@ -22,7 +22,7 @@ pacmanPipelineGenericDocker(
     ],
     buildHook: { params ->
         configMap = [
-            test_run: params.test_run,
+            //test_run: params.test_run,
             branch_from: params.branch_from,
             branch_to: params.branch_to,
             version_commit_jira: params.version_commit_jira,
@@ -34,7 +34,7 @@ pacmanPipelineGenericDocker(
             // enable_feature_x: params.enable_feature_x
         ]
             // Convert config map to JSON string
-       def jsonConfigString = JsonOutput.toJson(configMap)
+            def jsonConfigString = JsonOutput.toJson(configMap)
             // Convert JSON string to JSON Object
             def jsonConfig = readJSON text: jsonConfigString  
             // Save config as JSON in correct dir
