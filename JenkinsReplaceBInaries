@@ -1,0 +1,146 @@
+@Library("PacMan") _
+
+pacmanPipelineGenericDocker(
+    nodeLabel: "automation&&azure",
+    jobParameters: [
+        booleanParam(name: 'test_run', defaultValue: true, description: 'Enable test_run option to create a feature branch from branch_from for testing purpose'),
+        string(name: 'branch_from', defaultValue: 'ctx-master', description: 'Release branching source branch'),
+        string(name: 'branch_to', defaultValue: 'ctx-master', description: 'Release branching target branch. Example input: ctx-release-2303 or feature-APPP-2026-test for test run'),
+        string(name: 'version_commit_jira', defaultValue: '', description: 'Version update commit Jira ID. Example input: APPP-2026'),
+        //string(name: 'release_major_version', defaultValue: '', description: 'Optional parameter. Left empty will skip the release version update step. This value will be used to update the major version, which is the first field in the versioning for release branch. Use same major version as branch_from branch to skip update. Example input: 22'),
+        //string(name: 'release_minor_version', defaultValue: '', description: 'Optional parameter. Left empty will skip the release version update step. This value will be used to update the minor version, which is the second field in the versioning for release branch. Use same minor version as branch_from branch to skip update Example input: 12'),
+        //string(name: 'master_major_version', defaultValue: '', description: 'Optional parameter. Left empty will skip the master version update step. Only used when test_run is disabled. This value will be used to update the major version, which is the first field in the versioning for master branch. Example input: 22'),
+        //string(name: 'master_minor_version', defaultValue: '', description: 'Optional parameter. Left empty will skip the master version update step. Only used when test_run is disabled. This value will be used to update the minor version, which is the second field in the versioning for master branch. Example input: 12'),
+        string(name: 'slack_receiver', defaultValue : '', description: 'Optional parameter. The automation will send slack notifacition to provided user or channel. eg: @user or #channel'),
+        //booleanParam(name: 'enable_feature_x', defaultValue: false, description: 'Enable Feature X')
+    ],
+    buildHook: { params ->
+        configMap = [
+            test_run: params.test_run,
+            branch_from: params.branch_from,
+            branch_to: params.branch_to,
+            version_commit_jira: params.version_commit_jira,
+            // release_major_version: params.release_major_version,
+            // release_minor_version: params.release_minor_version,
+            // master_major_version: params.master_major_version,
+            // master_minor_version: params.master_minor_version,
+            slack_receiver: params.slack_receiver,
+            // enable_feature_x: params.enable_feature_x
+        ]
+            // Convert config map to JSON string
+       def jsonConfigString = JsonOutput.toJson(configMap)
+            // Convert JSON string to JSON Object
+            def jsonConfig = readJSON text: jsonConfigString  
+            // Save config as JSON in correct dir
+            def configPath = "${env.WORKSPACE}/Automation.json"
+            writeJSON(file: configPath, json: jsonConfig, pretty: 4)
+            echo "Config saved to ${configPath}"
+            println "Config saved to ${configPath} and data from config is ${jsonConfig}"
+        stage("Branching automation") {
+            echo "branch_to : ${branch_to}"
+            echo "branch_from : ${branch_from}"
+            echo "version_commit_jira: ${version_commit_jira}"
+            // echo "release_major_version: ${release_major_version}"
+            // echo "release_minor_version: ${release_minor_version}"
+            // echo "master_major_version: ${master_major_version}"
+            // echo "master_minor_version: ${master_minor_version}"
+            echo "test_run: ${test_run}"
+            //echo "enable_feature_x: ${enable_feature_x}"
+            
+            if (!slack_receiver?.trim()) {
+                slack_receiver = "@${env.buildUserID}"
+            }
+            
+            if (test_run.equals("true")) {
+                if (!branch_to.startsWith("feature-")) {
+                    message = "Branching Automation Build Failed. Please provide a feature branch in branch_to parameter for test run"
+                    sendSlackNotification(false, slack_receiver, message)
+                    throw new Exception("Build Failed. Please use feature branch as branch_to for test run.")
+                }
+            } else {
+                if (!branch_to.startsWith("release-")) {
+                    message = "Branching Automation Build Failed. Please provide a release branch in branch_to parameter. If you want to test on feature branch, please check test_run option"
+                    sendSlackNotification(false, slack_receiver, message)
+                    throw new Exception("Build Failed. Please use release branch as branch_to. Please check test_run option if you want to test on feature branch")
+                }
+            }
+            
+            if (!version_commit_jira?.trim()) {
+                message = "Branching Automation Build Failed. Please provide a JIRA ticket ID"
+                sendSlackNotification(false, slack_receiver, message)
+                throw new Exception("Build Failed. Please provided a JIRA ID")
+            }
+            
+            // if (enable_feature_x) {
+            //     echo "Feature X is enabled. Performing additional steps for Feature X."
+            //     // Add additional steps for Feature X here
+            // }
+            
+            // def bld_secrets = [
+            //     [secretType: 'Secret', name: "tc01-token", envVariable: 'TC_API_KEY_SECRETPASSWORD']
+            // ]
+            
+            // sshagent(['svcacct_git_write']) {
+            //     withAzureKeyvault(credentialIDOverride: "Azure_SPN_secretmapper", keyVaultURLOverride: "$env.AZURE_KEYVAULT_URL", azureKeyVaultSecrets: bld_secrets) {
+            //         def build_status = powershell(returnStatus: true, script: """Jenkins/linuxvda/linuxvda_wrapper.ps1 -branch_from ${branch_from} -branch_to ${branch_to} -version_commit_jira ${version_commit_jira} -release_major_version ${release_major_version} -release_minor_version ${release_minor_version} -master_major_version "${master_major_version}" -master_minor_version "${master_minor_version}" -tc_api_key $env.TC_API_KEY_SECRETPASSWORD -test_run ${test_run}""")
+            //         if (build_status != 0) {
+            //             message = "Branching Automation Build Failed. Please check with Build team. ${BUILD_URL}"
+            //             sendSlackNotification(false, slack_receiver, message)
+            //             throw new Exception("Build Failed.")
+            //         } else {
+            //             echo "Build Passed."
+            //             message = "Successfully completed linuxvda ${branch_to} branch cut. \n"
+            //             sendSlackNotification(true, slack_receiver, message)
+            //         }
+            //     }
+            // }
+        }
+        def TOut= env.Timeout.toInteger()
+        println "Timeout -- ${TOut}"
+        stage('Test Execution') { 
+                try {
+                    timeout(TOut){
+                    powershellPath ="${env.WORKSPACE}/Replacebinaries/Replacebinaries.ps1"
+                    powershell(powershellPath)
+                    //println "Archiving Artifacts"
+                    //archiveArtifacts artifacts: "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/reports/*.*"  
+                    }
+                }
+                catch (Exception e) {
+                    echo "Exception: ${e}"
+                    throw e
+                }
+        stage("Post-Build Cleanup") {
+            steps {
+                script {
+                    echo "Performing post-build cleanup tasks..."
+                    // Add cleanup tasks here
+                }
+            }
+        }
+    }
+}
+)
+
+
+def sendSlackNotification(status, slack_receiver, message) {
+    // The token from the Jenkins Credentials to be used to send notifications to Slack
+    def tokenId = 'slack-ses-build-autopush-failures'
+
+    // Using the ternary operator to set the values based on the build result
+    def targetChannel = "${slack_receiver}"
+    def color = status ? 'good' : 'danger'
+    
+    if (status) {
+        def linuxvda_checklist_content = readFile "${workspace}/Checklist_LinuxVDA.txt"
+        if (linuxvda_checklist_content.contains("[Error]")) {
+            color = 'warning'
+        }
+        message += "Linuxvda Branching Automation Completion Checklist:\n ${linuxvda_checklist_content}"
+    }
+    
+    echo "${message}"
+    // slackSend uses the Slack notification plugin
+    slackSend botUser: false, color: color, failOnError: false, teamDomain: 'citrix',
+              channel: targetChannel, tokenCredentialId: tokenId, message: message
+}
