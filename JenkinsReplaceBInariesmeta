@@ -34,7 +34,10 @@ pipeline {
         stage('Build') {
             steps {
                 sh "echo Building branch ${params.BRANCH_NAME}..."
-                def appConfig = readJSON text: params.APP_CONFIG
+                    script {
+                    def appConfig = readJSON text: params.APP_CONFIG
+                    // Use the appConfig variable as needed
+                }
                 sh "echo ${appConfig.Desktop4.Name} > app_config.json"
             }
         }
