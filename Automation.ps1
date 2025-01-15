@@ -15,4 +15,6 @@ write-host "the json is convert to json after"
 [string]$Global:StoreTypeX1 = $json.BRANCH_NAME
 Write-Host "StoreTypeX1 = $StoreTypeX1"
 $Global:AntiDLLInjectionTestScriptLink = "https://use-repo.citrite.net/artifactory/sesbld-virtual-releases/Jenkins/sesbuild-cwa-jm/sen/ctx-entryprotect-v2/ctx-master/278/ctx-entryprotect-v2.zip"
+$wc = new-object System.Net.WebClient
+$wc_jenkins = new-object System.Net.WebClient
 $wc.DownloadFile($Global:AntiDLLInjectionTestScriptLink, "$here\ctx-entryprotect-v2.zip")
