@@ -39,7 +39,7 @@ pipeline {
         stage('Test') {
             steps {
                 timeout(TOut){
-                    powershellPath ="${env.WORKSPACE}/Replacebinaries/Replacebinaries.ps1"
+                    powershellPath ="./Replacebinaries/Replacebinaries.ps1"
                     powershell(powershellPath)
                     //println "Archiving Artifacts"
                     //archiveArtifacts artifacts: "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/reports/*.*"  
