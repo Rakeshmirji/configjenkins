@@ -1,4 +1,5 @@
 import groovy.json.JsonSlurper
+def appConfig=null
 pipeline {
     agent { node 'Apppxenwin10Agent_10.109.201.168' }
 
