@@ -9,7 +9,7 @@ pipeline {
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
-        string(name: 'Timeout', defaultValue: '1000', description: 'Environment to deploy to')
+        string(name: 'Timeout', defaultValue: '1000', description: 'Timeout for the Test stage (in seconds)')
     }
 
     stages {
@@ -26,9 +26,6 @@ pipeline {
                     def jsonConfigString = toJson(configMap)
 
                     echo "Generated JSON: ${jsonConfigString}"
-                    TOut= env.Timeout.toInteger()
-
-                    // Save the JSON string to the specified path
                     def configPath = './Automation.json'
                     writeFile file: configPath, text: jsonConfigString
                 }
@@ -38,12 +35,15 @@ pipeline {
 
         stage('Test') {
             steps {
-                timeout(TOut){
-                    powershellPath ="${env.WORKSPACE}/Replacebinaries.ps1"
-                    powershell(powershellPath)
-                    //println "Archiving Artifacts"
-                    //archiveArtifacts artifacts: "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/reports/*.*"  
-                    }
+                script {
+                    def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
+                    def powershellPath = "${env.WORKSPACE}/Replacebinaries.ps1" // Define the PowerShell script path
+                    echo "PowerShell script path: ${powershellPath}"
+                }
+                timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
+                    // Execute the PowerShell script
+                    bat "powershell -File ${env.WORKSPACE}/Replacebinaries.ps1"
+                }
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
             }
         }
