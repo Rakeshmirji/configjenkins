@@ -52,6 +52,33 @@ function Create-Folder {
     Write-Host "Folder created: $FolderPath"
   }
   
+  function Get-FilesAndFolders {
+    param (
+      [string]$FolderPath
+    )
+  
+    if (!(Test-Path $FolderPath)) {
+      throw "Folder not found: $FolderPath"
+    }
+  
+    $filesAndFolders = Get-ChildItem -Path $FolderPath
+  
+    # Separate files and folders
+    $files = $filesAndFolders | Where-Object {$_.PSIsContainer -eq $false}
+    $folders = $filesAndFolders | Where-Object {$_.PSIsContainer -eq $true}
+  
+    # Print files and folders
+    Write-Host "Files:"
+    foreach ($file in $files) {
+      Write-Host $file.Name
+    }
+  
+    Write-Host "Folders:"
+    foreach ($folder in $folders) {
+      Write-Host $folder.Name
+    }
+  }
+    
 # Example usage:
 $sourceZip = "C:\Source\example.zip"
 $destinationPath = "C:\Destination"
@@ -59,5 +86,5 @@ Create-Folder -FolderPath "$here\extracted_ctx_folder"
 Extract-ZipFolder -SourceZip "$here\ctx-entryprotect-v2.zip" -DestinationPath "$here\extracted_ctx_folder"
 $extractedctxpath = "$here\extracted_ctx_folder"
 Write-Host $extractedctxpath
-
+Get-FilesAndFolders -FolderPath $extractedctxpath
 
