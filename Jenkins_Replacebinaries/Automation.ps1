@@ -16,15 +16,13 @@ $json | ConvertTo-Json -Depth 10 | Write-Host
 write-host "the json is convert to json after"
 
 [string]$Global:BRANCH_NAME = $json.BRANCH_NAME
-Write-Host "BRANCH_NAME = $StoreTypeX1"
+Write-Host "BRANCH_NAME = $BRANCH_NAME"
 #$Global:AntiDLLInjectionTestScriptLink = "https://use-repo.citrite.net/artifactory/sesbld-virtual-releases/Jenkins/sesbuild-cwa-jm/sen/ctx-entryprotect-v2/ctx-master/278/ctx-entryprotect-v2.zip"
 $Global:AntiDLLInjectionTestScriptLink = $json.ctxentryprotectv2_download_LINK1
 Write-Host "AntiDLLInjectionTestScriptLink = $Global:AntiDLLInjectionTestScriptLink"
 $wc = new-object System.Net.WebClient
 $wc_jenkins = new-object System.Net.WebClient
 $wc.DownloadFile($Global:AntiDLLInjectionTestScriptLink, "$here\ctx-entryprotect-v2.zip")
-
-#Extract $here\ctx-entryprotect-v2.zip
 function Extract-ZipFolder {
   param (
     [string]$SourceZip,
@@ -82,10 +80,8 @@ function Create-Folder {
     }
   }
     
-# Example usage:
-$sourceZip = "C:\Source\example.zip"
-$destinationPath = "C:\Destination"
 Create-Folder -FolderPath "$here\extracted_ctx_folder"
+Create-Folder -FolderPath "$here\signedbinaries"
 Extract-ZipFolder -SourceZip "$here\ctx-entryprotect-v2.zip" -DestinationPath "$here\extracted_ctx_folder"
 $extractedctxpath = "$here\extracted_ctx_folder"
 Write-Host $extractedctxpath
@@ -94,3 +90,4 @@ Get-FilesAndFolders -FolderPath $extractedctxpath
 write-host "the Get-FilesAndFolders in $repository_path are"
 Get-FilesAndFolders -FolderPath $repository_path
 
+Write-Host $signedbinariespath
