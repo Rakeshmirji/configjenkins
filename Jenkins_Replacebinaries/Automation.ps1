@@ -20,3 +20,48 @@ Write-Host "AntiDLLInjectionTestScriptLink = $Global:AntiDLLInjectionTestScriptL
 $wc = new-object System.Net.WebClient
 $wc_jenkins = new-object System.Net.WebClient
 $wc.DownloadFile($Global:AntiDLLInjectionTestScriptLink, "$here\ctx-entryprotect-v2.zip")
+
+#Extract $here\ctx-entryprotect-v2.zip
+function Extract-ZipFolder {
+  param (
+    [string]$SourceZip,
+    [string]$DestinationPath
+  )
+
+  if (!(Test-Path $SourceZip)) {
+    throw "Source zip file not found: $SourceZip"
+  }
+
+  if (!(Test-Path $DestinationPath)) {
+    New-Item -Path $DestinationPath -ItemType Directory -Force | Out-Null
+  }
+
+  Expand-Archive -Path $SourceZip -DestinationPath $DestinationPath -Force
+}
+
+
+function Create-Folder {
+  param (
+    [string]$FolderPath
+  )
+
+  if (!(Test-Path $FolderPath)) {
+    New-Item -Path $FolderPath -ItemType Directory -Force | Out-Null
+    Write-Host "Folder created: $FolderPath"
+  } else {
+    Write-Host "Folder already exists: $FolderPath"
+  }
+}
+
+# Example usage:
+$folderPath = "C:\Example\NewFolder"
+
+# Example usage:
+$sourceZip = "C:\Source\example.zip"
+$destinationPath = "C:\Destination"
+Create-Folder -FolderPath "$here\extracted_ctx_folder"
+Extract-ZipFolder -SourceZip "$here\ctx-entryprotect-v2.zip" -DestinationPath "$here\extracted_ctx_folder"
+$extractedctxpath = "$here\extracted_ctx_folder"
+Write-Host $extractedctxpath
+
+
