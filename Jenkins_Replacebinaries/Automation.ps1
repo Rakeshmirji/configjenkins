@@ -84,10 +84,10 @@ Create-Folder -FolderPath "$here\extracted_ctx_folder"
 Create-Folder -FolderPath "$here\signedbinaries"
 Extract-ZipFolder -SourceZip "$here\ctx-entryprotect-v2.zip" -DestinationPath "$here\extracted_ctx_folder"
 $extractedctxpath = "$here\extracted_ctx_folder"
-Write-Host $extractedctxpath
+Write-Host "ctx-entryprotect-v2.zip is extracted to extractedctxpath $extractedctxpath"
 Get-FilesAndFolders -FolderPath $extractedctxpath
 
 write-host "the Get-FilesAndFolders in $repository_path are"
 Get-FilesAndFolders -FolderPath $repository_path
 
-Write-Host $signedbinariespath
+Write-Host "signedbinariespath is $signedbinariespath"
