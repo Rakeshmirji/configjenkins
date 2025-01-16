@@ -11,6 +11,9 @@ pipeline {
         string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment to deploy to')
         string(name: 'Timeout', defaultValue: '1000', description: 'Timeout for the Test stage (in seconds)')
         string(name: 'ctxentryprotectv2_download_link_branch', defaultValue: 'https://use-repo.citrite.net/artifactory/sesbld-virtual-releases/Jenkins/sesbuild-cwa-jm/sen/ctx-entryprotect-v2/ctx-master/278/ctx-entryprotect-v2.zip', description: 'Timeout for the Test stage (in seconds)')
+        string(name: 'branch_from', defaultValue: 'ctx-master', description: 'branch to be created from')
+        string(name: 'branch_to', defaultValue: 'ctx-master', description: 'Release branching target branch. Example input: ctx-release-2303')
+        string(name: 'version_commit_jira', defaultValue: 'APPP-jiranumber', description: 'Version update commit Jira ID. for Example input: APPP-2026')
         
 
         
@@ -25,6 +28,8 @@ pipeline {
                         BRANCH_NAME: params.BRANCH_NAME,
                         ENVIRONMENT: params.ENVIRONMENT,
                         ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch
+                        BRANCH_FROM : params.branch_from
+                        BRANCH_TO : params.branch_to
 
                     ]
 
