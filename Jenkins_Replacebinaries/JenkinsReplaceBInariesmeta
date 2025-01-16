@@ -4,6 +4,7 @@ def toJson(map) {
 }
 def ChromiumBranch = ["ChromiumBranch": params.ChromiumBranch]
 def BuildId = ["BuildId": params.BuildId]
+def configMap =[]
 configMap << ChromiumBranch
 configMap << BuildId
 
