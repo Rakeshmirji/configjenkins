@@ -2,8 +2,6 @@
 def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
-def ChromiumBranch = ["ChromiumBranch": params.ChromiumBranch]
-def BuildId = ["BuildId": params.BuildId]
 
 
 
@@ -33,7 +31,10 @@ pipeline {
                         ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
                         BRANCH_FROM : params.branch_from,
                         BRANCH_TO : params.branch_to,
-                        VERSION_COMMIT_JIRA : params.version_commit_jira
+                        VERSION_COMMIT_JIRA : params.version_commit_jira,
+                        ChromiumBranch: params.ChromiumBranch,
+                        BuildId: params.BuildId
+
                     ]
                     configMap << ChromiumBranch
                     configMap << BuildId
