@@ -4,9 +4,8 @@ def toJson(map) {
 }
 def ChromiumBranch = ["ChromiumBranch": params.ChromiumBranch]
 def BuildId = ["BuildId": params.BuildId]
-def configMap =[]
-configMap << ChromiumBranch
-configMap << BuildId
+
+
 
 pipeline {
     agent { label TestNode }
@@ -36,6 +35,8 @@ pipeline {
                         BRANCH_TO : params.branch_to,
                         VERSION_COMMIT_JIRA : params.version_commit_jira
                     ]
+                    configMap << ChromiumBranch
+                    configMap << BuildId
                     // Generate JSON string using custom toJson function
                     def jsonConfigString = toJson(configMap)
 
