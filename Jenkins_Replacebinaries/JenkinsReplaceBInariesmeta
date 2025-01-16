@@ -36,8 +36,7 @@ pipeline {
                         BuildId: params.BuildId
 
                     ]
-                    configMap << ChromiumBranch
-                    configMap << BuildId
+                    
                     // Generate JSON string using custom toJson function
                     def jsonConfigString = toJson(configMap)
 
