@@ -56,7 +56,7 @@ pipeline {
                 timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
                     // Execute the PowerShell script
                     println("Executing PowerShell script...")
-                    bat "powershell -File ${env.WORKSPACE}/Automation.ps1"
+                    bat "powershell -File ${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1"
                     println("Executing PowerShell script...endd")
                 }
                 sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
