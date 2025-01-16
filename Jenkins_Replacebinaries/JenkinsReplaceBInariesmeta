@@ -3,7 +3,6 @@ def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
 def ChromiumBranch = ["ChromiumBranch": params.ChromiumBranch]
-def ChromiumBranch = ["ChromiumBranch": params.ChromiumBranch]
 def BuildId = ["BuildId": params.BuildId]
 configMap << ChromiumBranch
 configMap << BuildId
