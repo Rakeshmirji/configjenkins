@@ -38,24 +38,20 @@ function Extract-ZipFolder {
 
   Expand-Archive -Path $SourceZip -DestinationPath $DestinationPath -Force
 }
-
-
 function Create-Folder {
-  param (
-    [string]$FolderPath
-  )
-
-  if (!(Test-Path $FolderPath)) {
+    param (
+      [string]$FolderPath
+    )
+  
+    if (Test-Path $FolderPath) {
+      Remove-Item -Path $FolderPath -Recurse -Force
+      Write-Host "Existing folder deleted: $FolderPath"
+    }
+  
     New-Item -Path $FolderPath -ItemType Directory -Force | Out-Null
     Write-Host "Folder created: $FolderPath"
-  } else {
-    Write-Host "Folder already exists: $FolderPath"
   }
-}
-
-# Example usage:
-$folderPath = "C:\Example\NewFolder"
-
+  
 # Example usage:
 $sourceZip = "C:\Source\example.zip"
 $destinationPath = "C:\Destination"
