@@ -50,7 +50,7 @@ pipeline {
             steps {
                 script {
                     def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
-                    def powershellPath = "${env.WORKSPACE}/Automation.ps1" // Define the PowerShell script path
+                    def powershellPath = "${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1" // Define the PowerShell script path
                     echo "PowerShell script path: ${powershellPath}"
                 }
                 timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
