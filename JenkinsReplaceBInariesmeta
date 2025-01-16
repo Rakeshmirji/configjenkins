@@ -27,8 +27,8 @@ pipeline {
                     def configMap = [
                         BRANCH_NAME: params.BRANCH_NAME,
                         ENVIRONMENT: params.ENVIRONMENT,
-                        ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch
-                        BRANCH_FROM : params.branch_from
+                        ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
+                        BRANCH_FROM : params.branch_from,
                         BRANCH_TO : params.branch_to
 
                     ]
