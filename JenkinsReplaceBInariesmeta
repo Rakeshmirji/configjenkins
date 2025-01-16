@@ -29,7 +29,9 @@ pipeline {
                         ENVIRONMENT: params.ENVIRONMENT,
                         ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
                         BRANCH_FROM : params.branch_from,
-                        BRANCH_TO : params.branch_to
+                        BRANCH_TO : params.branch_to,
+                        VERSION_COMMIT_JIRA : params.version_commit_jira
+
 
                     ]
 
