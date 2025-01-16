@@ -3,6 +3,9 @@ $hereParent = Split-Path -Path $here -Parent
 Write-Host "here = $here"
 Write-Host "hereParent = $hereParent"
 
+$repository_path = "$hereParent"
+Write-Host "repository_path = $repository_path"
+
 $json = (Get-Content "$here\Automation.json" -Raw) | ConvertFrom-Json
 $Global:jsondata = $json
 #### Read Values supplied in JSON file ######
@@ -87,4 +90,7 @@ Extract-ZipFolder -SourceZip "$here\ctx-entryprotect-v2.zip" -DestinationPath "$
 $extractedctxpath = "$here\extracted_ctx_folder"
 Write-Host $extractedctxpath
 Get-FilesAndFolders -FolderPath $extractedctxpath
+
+write-host "the Get-FilesAndFolders in $repository_path are"
+Get-FilesAndFolders -FolderPath $repository_path
 
