@@ -4,7 +4,7 @@ def toJson(map) {
 }
 
 pipeline {
-    agent { label 'Apppxenwin10Agent_10.109.201.189' }
+    agent { label TestNode }
 
     parameters {
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name to build')
@@ -18,9 +18,8 @@ pipeline {
 
         
     }
-
     stages {
-        stage('Download Binaries') {
+        stage('Configuration') {
             steps {
                 script {
                     // Add BRANCH_NAME and ENVIRONMENT to the configMap
@@ -31,10 +30,7 @@ pipeline {
                         BRANCH_FROM : params.branch_from,
                         BRANCH_TO : params.branch_to,
                         VERSION_COMMIT_JIRA : params.version_commit_jira
-
-
                     ]
-
                     // Generate JSON string using custom toJson function
                     def jsonConfigString = toJson(configMap)
 
@@ -46,7 +42,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
+        stage('Execution') {
             steps {
                 script {
                     def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
@@ -64,9 +60,9 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Cleanup') {
             steps {
-                sh "echo Deploying to ${params.ENVIRONMENT} environment..."
+                sh "echo Cleanup steps..."
             }
         }
     }
