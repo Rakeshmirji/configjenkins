@@ -39,7 +39,7 @@ pipeline {
                     def jsonConfigString = toJson(configMap)
 
                     echo "Generated JSON: ${jsonConfigString}"
-                    def configPath = './Automation.json'
+                    def configPath = './Jenkins_Replacebinaries/Automation.json'
                     writeFile file: configPath, text: jsonConfigString
                 }
                 sh "echo Building branch ${params.BRANCH_NAME}..."
