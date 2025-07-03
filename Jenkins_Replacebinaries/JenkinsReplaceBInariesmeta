@@ -3,15 +3,7 @@ def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
 ef configMap = [
-    flow_properties: flow_properties_map,
-    CWA_values: CWA_values_map,
-    app_config: app_config_map,
-    auto_update_values: auto_update_values_map,
-    onpremvalues: onpremvalues_map,
-    grafeas: grafeas_values_map,
-    customPortal: customPortal_value_map,
-    slack_value:slack_map,
-    Apps:Apps_map
+    CWA_values: CWA_values_map
 ]
 // def jsonConfigString = JsonOutput.toJson(configMap)
 
