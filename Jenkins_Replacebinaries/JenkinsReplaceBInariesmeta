@@ -92,55 +92,55 @@ pipeline {
                 }
             
         }
-        stage('Configuration') {
-            steps {
-                script {
-                    // Add BRANCH_NAME and ENVIRONMENT to the configMap
-                    def configMap = [
-                        BRANCH_NAME: params.BRANCH_NAME,
-                        ENVIRONMENT: params.ENVIRONMENT,
-                        ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
-                        BRANCH_FROM : params.branch_from,
-                        BRANCH_TO : params.branch_to,
-                        VERSION_COMMIT_JIRA : params.version_commit_jira,
-                        ChromiumBranch: params.ChromiumBranch,
-                        BuildId: params.BuildId
+        // stage('Configuration') {
+        //     steps {
+        //         script {
+        //             // Add BRANCH_NAME and ENVIRONMENT to the configMap
+        //             def configMap = [
+        //                 BRANCH_NAME: params.BRANCH_NAME,
+        //                 ENVIRONMENT: params.ENVIRONMENT,
+        //                 ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
+        //                 BRANCH_FROM : params.branch_from,
+        //                 BRANCH_TO : params.branch_to,
+        //                 VERSION_COMMIT_JIRA : params.version_commit_jira,
+        //                 ChromiumBranch: params.ChromiumBranch,
+        //                 BuildId: params.BuildId
 
-                    ]
+        //             ]
                     
-                    // Generate JSON string using custom toJson function
-                    def jsonConfigString = toJson(configMap)
+        //             // Generate JSON string using custom toJson function
+        //             def jsonConfigString = toJson(configMap)
 
-                    echo "Generated JSON: ${jsonConfigString}"
-                    def configPath = './Jenkins_Replacebinaries/Automation.json'
-                    writeFile file: configPath, text: jsonConfigString
-                }
-                sh "echo Building branch ${params.BRANCH_NAME}..."
-            }
-        }
+        //             echo "Generated JSON: ${jsonConfigString}"
+        //             def configPath = './Jenkins_Replacebinaries/Automation.json'
+        //             writeFile file: configPath, text: jsonConfigString
+        //         }
+        //         sh "echo Building branch ${params.BRANCH_NAME}..."
+        //     }
+        // }
 
-        stage('Execution') {
-            steps {
-                script {
-                    def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
-                    echo "env.WORKSPACE  path: ${env.WORKSPACE}"
-                    def powershellPath = "${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1" // Define the PowerShell script path
-                    echo "PowerShell script path: ${powershellPath}"
-                }
-                timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
-                    // Execute the PowerShell script
-                    println("Executing PowerShell script...")
-                    bat "powershell -File ${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1"
-                    println("Executing PowerShell script...endd")
-                }
-                sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
-            }
-        }
+        // stage('Execution') {
+        //     steps {
+        //         script {
+        //             def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
+        //             echo "env.WORKSPACE  path: ${env.WORKSPACE}"
+        //             def powershellPath = "${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1" // Define the PowerShell script path
+        //             echo "PowerShell script path: ${powershellPath}"
+        //         }
+        //         timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
+        //             // Execute the PowerShell script
+        //             println("Executing PowerShell script...")
+        //             bat "powershell -File ${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1"
+        //             println("Executing PowerShell script...endd")
+        //         }
+        //         sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
+        //     }
+        // }
 
-        stage('Cleanup') {
-            steps {
-                sh "echo Cleanup steps..."
-            }
-        }
+        // stage('Cleanup') {
+        //     steps {
+        //         sh "echo Cleanup steps..."
+        //     }
+        // }
     }
 }
