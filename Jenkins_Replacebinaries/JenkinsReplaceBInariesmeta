@@ -21,6 +21,70 @@ pipeline {
         
     }
     stages {
+        stage('Test Signing') {
+                script {
+                    if (params.SetTestSigning == "True") {
+                        def myString = params.SetTestSigning
+                        println myString
+                        def SetTestSigningvalue = ["SetTestSigning": "False"]
+                        configMap << SetTestSigningvalue
+                        def jsonConfigString = JsonOutput.toJson(configMap)
+                        def jsonConfig = readJSON text: jsonConfigString
+                        def configPath = "${env.WORKSPACE}/Automation/CWA_Automation/CWA_Automation/flows/config/Automation.json"
+                        writeJSON(file: configPath, json: jsonConfig, pretty: 4)
+                        
+                        // Reboot the machine
+                        bat 'shutdown -r -f'
+                        echo "Waiting for VM to reboot ${env.NODE_NAME}"
+                           def count = 1
+                            while (count <= 50) {
+                                sleep(5)
+                                if (!(nodesByLabel("${env.NODE_NAME}").size() > 0)) {
+                                    break
+                                }
+                                count++
+                            }
+
+                            echo "Waiting for VM to connect"
+                            count = 1
+                            while (count <= 100) {
+                                sleep(5)
+                                if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
+                                    break
+                                }
+                                count++
+                            }
+                        } else {
+                            println "Revert Snapshot is set to No"
+                        }
+                        // Wait for node to go offline
+                        // def count = 1
+                        // while (count <= 50) {
+                        //     sleep(5)
+                        //     if (nodesByLabel("${env.NODE_NAME}").isEmpty()) {
+                        //         break
+                        //     }
+                        //     count++
+                        // }
+                        
+                        // // Wait for node to come back online
+                        // echo "Waiting for VM to connect"
+
+                        // count = 1
+                        // while (count <= 100) {
+                        //     sleep(5)
+                        //     if (!nodesByLabel("${env.NODE_NAME}").isEmpty()) {
+                        //         break
+                        //     }
+                        //     count++
+                        // }
+                        
+                        // if (count > 100) {
+                        //     error("Failed to reconnect to node ${env.NODE_NAME} after reboot")
+                        // }
+                    }
+                }
+            }
         stage('Configuration') {
             steps {
                 script {
