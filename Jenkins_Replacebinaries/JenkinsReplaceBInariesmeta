@@ -2,7 +2,7 @@
 def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
-ef configMap = [
+def configMap = [
     CWA_values: CWA_values_map
 ]
 // def jsonConfigString = JsonOutput.toJson(configMap)
