@@ -22,6 +22,7 @@ pipeline {
     }
     stages {
         stage('Test Signing') {
+                   steps {
                 script {
                     if (params.SetTestSigning == "True") {
                         def myString = params.SetTestSigning
@@ -85,7 +86,7 @@ pipeline {
                     }
                 }
             
-
+        }
         stage('Configuration') {
             steps {
                 script {
