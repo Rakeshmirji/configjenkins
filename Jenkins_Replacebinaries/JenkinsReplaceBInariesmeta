@@ -37,6 +37,7 @@ pipeline {
                         writeJSON(file: configPath, json: jsonConfig, pretty: 4)
                         
                         // Reboot the machine
+                        bat 'bcdedit -set testsigning on'
                         bat 'shutdown /r /f'
                         echo "Waiting for VM to reboot ${env.NODE_NAME}"
                         def count = 1
@@ -52,6 +53,15 @@ pipeline {
                         while (count <= 100) {
                             sleep(time: 5, unit: 'SECONDS')
                             if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
+                                @echo off
+                                bat 'bcdedit /enum | findstr /i "testsigning.*Yes" > nul
+                                if %errorlevel%==0 (
+                                    echo Test Signing is enabled
+                                ) else (
+                                    echo Test Signing is disabled
+                                    pause
+                                )'
+                                
                                 break
                             }
                             count++
