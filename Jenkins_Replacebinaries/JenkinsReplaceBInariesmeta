@@ -43,7 +43,7 @@ pipeline {
                             bat 'bcdedit -set testsigning on'
                         }
                          if (params.SetTestSigning == "False") {
-                            bat 'bcdedit -set testsigning on'
+                            bat 'bcdedit -set testsigning off'
                         }
                         bat 'shutdown /r /f'
                         echo "Waiting for VM to reboot ${env.NODE_NAME}"
