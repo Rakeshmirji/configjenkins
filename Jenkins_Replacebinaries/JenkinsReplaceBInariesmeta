@@ -22,6 +22,7 @@ pipeline {
         string(name: 'branch_to', defaultValue: 'ctx-master', description: 'Release branching target branch. Example input: ctx-release-2303')
         string(name: 'version_commit_jira', defaultValue: 'APPP-jiranumber', description: 'Version update commit Jira ID. for Example input: APPP-2026')
         string(name: 'SetTestSigning', defaultValue: 'False', description: 'Set Test Signing')
+        string(name: 'Rebootbeforeexecution', defaultValue: 'False', description: 'Reboot before execution')
     }
 
     stages {
