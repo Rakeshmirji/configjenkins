@@ -13,10 +13,10 @@ ef configMap = [
     slack_value:slack_map,
     Apps:Apps_map
 ]
-def jsonConfigString = JsonOutput.toJson(configMap)
+// def jsonConfigString = JsonOutput.toJson(configMap)
 
-// Convert JSON string to JSON Object
-def jsonConfig = readJSON text: jsonConfigString
+// // Convert JSON string to JSON Object
+// def jsonConfig = readJSON text: jsonConfigString
 
 pipeline {
     agent { label TestNode }
