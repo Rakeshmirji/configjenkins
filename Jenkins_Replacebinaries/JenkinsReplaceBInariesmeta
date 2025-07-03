@@ -1,20 +1,14 @@
 import groovy.json.*
-import com.cloudbees.groovy.cps.NonCPS
-import java.text.SimpleDateFormat
 
-//def flow_properties_map = readJSON text: flow_properties
 def CWA_values_map = readJSON text: CWA_values
-// Custom toJson function to manually construct JSON from a map
+
 def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
 }
+
 def configMap = [
     CWA_values: CWA_values_map
 ]
-// def jsonConfigString = JsonOutput.toJson(configMap)
-
-// // Convert JSON string to JSON Object
-// def jsonConfig = readJSON text: jsonConfigString
 
 pipeline {
     agent { label TestNode }
@@ -27,17 +21,14 @@ pipeline {
         string(name: 'branch_from', defaultValue: 'ctx-master', description: 'branch to be created from')
         string(name: 'branch_to', defaultValue: 'ctx-master', description: 'Release branching target branch. Example input: ctx-release-2303')
         string(name: 'version_commit_jira', defaultValue: 'APPP-jiranumber', description: 'Version update commit Jira ID. for Example input: APPP-2026')
-        
-
-        
+        string(name: 'SetTestSigning', defaultValue: 'False', description: 'Set Test Signing')
     }
+
     stages {
         stage('Test Signing') {
-                   steps {
+            steps {
                 script {
                     if (params.SetTestSigning == "True") {
-                        def myString = params.SetTestSigning
-                        println myString
                         def SetTestSigningvalue = ["SetTestSigning": "False"]
                         configMap << SetTestSigningvalue
                         def jsonConfigString = JsonOutput.toJson(configMap)
@@ -46,35 +37,28 @@ pipeline {
                         writeJSON(file: configPath, json: jsonConfig, pretty: 4)
                         
                         // Reboot the machine
-                        bat 'shutdown -r -f'
-                        echo "Waiting for VM to reboot ${env.NODE_NAME}"
-                           def count = 1
-                            while (count <= 50) {
-                                sleep(5)
-                                if (!(nodesByLabel("${env.NODE_NAME}").size() > 0)) {
-                                    break
-                                }
-                                count++
+                        bat 'shutdown /r /f'
+                        echo "Waiting for VM to reboot ${TestNode}"
+                        def count = 1
+                        while (count <= 50) {
+                            sleep(time: 5, unit: 'SECONDS')
+                            if (!(nodesByLabel("${TestNode}").size() > 0)) {
+                                break
                             }
+                            count++
+                        }
                         echo "Waiting for VM to connect"
-                                count = 1
-                                while (count <= 100) {
-                                    sleep(5)
-                                    if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
-                                        break
-                                    }
-                                    count++
-                                }
-                            } catch (Exception e) {
-                                println(e.toString())
-                                println 'Failed to execute describe block'
+                        count = 1
+                        while (count <= 100) {
+                            sleep(time: 5, unit: 'SECONDS')
+                            if (nodesByLabel("${TestNode}").size() > 0) {
+                                break
                             }
-
-               
+                            count++
+                        }
                     }
                 }
-            
+            }
         }
-  
     }
 }
