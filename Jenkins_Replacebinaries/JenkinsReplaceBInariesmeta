@@ -38,11 +38,11 @@ pipeline {
                         
                         // Reboot the machine
                         bat 'shutdown /r /f'
-                        echo "Waiting for VM to reboot ${TestNode}"
+                        echo "Waiting for VM to reboot ${env.NODE_NAME}"
                         def count = 1
                         while (count <= 50) {
                             sleep(time: 5, unit: 'SECONDS')
-                            if (!(nodesByLabel("${TestNode}").size() > 0)) {
+                            if (!(nodesByLabel("${env.NODE_NAME}").size() > 0)) {
                                 break
                             }
                             count++
@@ -51,7 +51,7 @@ pipeline {
                         count = 1
                         while (count <= 100) {
                             sleep(time: 5, unit: 'SECONDS')
-                            if (nodesByLabel("${TestNode}").size() > 0) {
+                            if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
                                 break
                             }
                             count++
