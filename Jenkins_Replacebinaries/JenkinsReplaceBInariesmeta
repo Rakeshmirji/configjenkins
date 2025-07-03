@@ -60,9 +60,9 @@ pipeline {
                       while (count <= 100) {
                         sleep(time: 5, unit: 'SECONDS')
                         if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
-                            if (params.SetTestSigning == "True") {
                             def output = bat(script: 'bcdedit /enum | findstr /i "testsigning"', returnStdout: true).trim()
                             echo "Test Signing status: ${output}"
+                            if (params.SetTestSigning == "True") {
                             if (output.contains('Yes')) {
                                 echo 'Test Signing is enabled'
                             } else {
