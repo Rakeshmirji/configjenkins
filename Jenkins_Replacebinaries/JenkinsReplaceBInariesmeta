@@ -1,3 +1,9 @@
+import groovy.json.*
+import com.cloudbees.groovy.cps.NonCPS
+import java.text.SimpleDateFormat
+
+//def flow_properties_map = readJSON text: flow_properties
+def CWA_values_map = readJSON text: CWA_values
 // Custom toJson function to manually construct JSON from a map
 def toJson(map) {
     return "{ " + map.collect { k, v -> "\"${k}\": \"${v}\"" }.join(", ") + " }"
