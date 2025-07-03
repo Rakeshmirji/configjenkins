@@ -84,7 +84,8 @@ pipeline {
                         // }
                     }
                 }
-            }
+            
+
         stage('Configuration') {
             steps {
                 script {
