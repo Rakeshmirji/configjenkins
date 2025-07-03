@@ -50,22 +50,19 @@ pipeline {
                         }
                         echo "Waiting for VM to connect"
                         count = 1
-                        while (count <= 100) {
-                            sleep(time: 5, unit: 'SECONDS')
-                            if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
-                                @echo off
-                                bat 'bcdedit /enum | findstr /i "testsigning.*Yes" > nul
-                                if %errorlevel%==0 (
-                                    echo Test Signing is enabled
-                                ) else (
-                                    echo Test Signing is disabled
-                                    pause
-                                )'
-                                
-                                break
+                      while (count <= 100) {
+                        sleep(time: 5, unit: 'SECONDS')
+                        if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
+                            def output = bat(script: 'bcdedit /enum | findstr /i "testsigning"', returnStdout: true).trim()
+                            if (output.contains('Yes')) {
+                                echo 'Test Signing is enabled'
+                            } else {
+                                echo 'Test Signing is disabled'
                             }
-                            count++
+                            break
                         }
+                        count++
+                    }
                     }
                 }
             }
