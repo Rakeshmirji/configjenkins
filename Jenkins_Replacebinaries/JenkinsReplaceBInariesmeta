@@ -60,7 +60,7 @@ pipeline {
                                 count = 1
                                 while (count <= 100) {
                                     sleep(5)
-                                    if (nodesByLabel(node_name).size() > 0) {
+                                    if (nodesByLabel("${env.NODE_NAME}").size() > 0) {
                                         break
                                     }
                                     count++
@@ -69,85 +69,12 @@ pipeline {
                                 println(e.toString())
                                 println 'Failed to execute describe block'
                             }
-                      
-                        // Wait for node to go offline
-                        // def count = 1
-                        // while (count <= 50) {
-                        //     sleep(5)
-                        //     if (nodesByLabel("${env.NODE_NAME}").isEmpty()) {
-                        //         break
-                        //     }
-                        //     count++
-                        // }
-                        
-                        // // Wait for node to come back online
-                        // echo "Waiting for VM to connect"
 
-                        // count = 1
-                        // while (count <= 100) {
-                        //     sleep(5)
-                        //     if (!nodesByLabel("${env.NODE_NAME}").isEmpty()) {
-                        //         break
-                        //     }
-                        //     count++
-                        // }
-                        
-                        // if (count > 100) {
-                        //     error("Failed to reconnect to node ${env.NODE_NAME} after reboot")
-                        // }
+               
                     }
                 }
             
         }
-        // stage('Configuration') {
-        //     steps {
-        //         script {
-        //             // Add BRANCH_NAME and ENVIRONMENT to the configMap
-        //             def configMap = [
-        //                 BRANCH_NAME: params.BRANCH_NAME,
-        //                 ENVIRONMENT: params.ENVIRONMENT,
-        //                 ctxentryprotectv2_download_LINK1: params.ctxentryprotectv2_download_link_branch,
-        //                 BRANCH_FROM : params.branch_from,
-        //                 BRANCH_TO : params.branch_to,
-        //                 VERSION_COMMIT_JIRA : params.version_commit_jira,
-        //                 ChromiumBranch: params.ChromiumBranch,
-        //                 BuildId: params.BuildId
-
-        //             ]
-                    
-        //             // Generate JSON string using custom toJson function
-        //             def jsonConfigString = toJson(configMap)
-
-        //             echo "Generated JSON: ${jsonConfigString}"
-        //             def configPath = './Jenkins_Replacebinaries/Automation.json'
-        //             writeFile file: configPath, text: jsonConfigString
-        //         }
-        //         sh "echo Building branch ${params.BRANCH_NAME}..."
-        //     }
-        // }
-
-        // stage('Execution') {
-        //     steps {
-        //         script {
-        //             def TOut = params.Timeout.toInteger() // Convert the timeout to an integer
-        //             echo "env.WORKSPACE  path: ${env.WORKSPACE}"
-        //             def powershellPath = "${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1" // Define the PowerShell script path
-        //             echo "PowerShell script path: ${powershellPath}"
-        //         }
-        //         timeout(time: params.Timeout.toInteger(), unit: 'SECONDS') {
-        //             // Execute the PowerShell script
-        //             println("Executing PowerShell script...")
-        //             bat "powershell -File ${env.WORKSPACE}/Jenkins_Replacebinaries/Automation.ps1"
-        //             println("Executing PowerShell script...endd")
-        //         }
-        //         sh "echo Testing branch ${params.BRANCH_NAME} in ${params.ENVIRONMENT} environment..."
-        //     }
-        // }
-
-        // stage('Cleanup') {
-        //     steps {
-        //         sh "echo Cleanup steps..."
-        //     }
-        // }
+  
     }
 }
